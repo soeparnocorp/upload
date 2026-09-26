@@ -1,3 +1,4 @@
+//
 export default function ProgressBar({ value }: { value: number }) {
   return (
     <div className="relative pt-1">
