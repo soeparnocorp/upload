@@ -16,12 +16,16 @@ export async function POST(request: Request): Promise<NextResponse> {
     return NextResponse.json({ error: 'File size too big (max 2MB)' }, { status: 400 })
   }
 
+  if (!request.body) {
+    return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+  }
+
   const key = `uploads/${crypto.randomUUID()}-${filename}`
 
   try {
     const body = new FixedLengthStream(contentLength)
     request.body.pipeTo(body.writable)
-    
+
     await env.MESSAGE_ASSETS.put(key, body.readable, {
       httpMetadata: { contentType },
     })
