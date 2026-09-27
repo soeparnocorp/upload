@@ -1,4 +1,3 @@
-//
 'use client'
 
 import { useState, type FormEvent } from 'react'
@@ -73,6 +72,8 @@ export default function Uploader() {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest()
       xhr.open('POST', '/api/upload')
+      xhr.setRequestHeader('x-filename', file.name)
+      xhr.setRequestHeader('content-type', file.type)
 
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
@@ -100,9 +101,7 @@ export default function Uploader() {
 
       xhr.onerror = () => reject(new Error('Network error during upload'))
 
-      const formData = new FormData()
-      formData.append('file', file)
-      xhr.send(formData)
+      xhr.send(file)
     })
   }
 
