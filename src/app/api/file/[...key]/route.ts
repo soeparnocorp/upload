@@ -1,11 +1,10 @@
-//
 import { getCloudflareContext } from '@opennextjs/cloudflare'
 
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ key: string[] }> }
 ) {
-  const { env } = getCloudflareContext()
+  const { env } = await getCloudflareContext({ async: true })
   const { key } = await params
   const objectKey = key.join('/')
 
