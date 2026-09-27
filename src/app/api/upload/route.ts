@@ -23,7 +23,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       httpMetadata: { contentType },
     })
 
-    return NextResponse.json({ key, url: `${env.PUBLIC_URL}/${key}` })
+    return NextResponse.json({ key, url: `https://pub-ad7376f5ad43494a86311f9b39971d8c.r2.dev/${key}` })
   } catch (error) {
     return NextResponse.json({ error: (error as Error).message }, { status: 500 })
   }
