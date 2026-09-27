@@ -11,15 +11,18 @@ export async function POST(request: Request): Promise<NextResponse> {
     return NextResponse.json({ error: 'We only accept image files' }, { status: 400 })
   }
 
-  const size = Number(request.headers.get('content-length') || 0)
-  if (size / 1024 / 1024 > 2) {
+  const contentLength = Number(request.headers.get('content-length') || 0)
+  if (contentLength / 1024 / 1024 > 2) {
     return NextResponse.json({ error: 'File size too big (max 2MB)' }, { status: 400 })
   }
 
   const key = `uploads/${crypto.randomUUID()}-${filename}`
 
   try {
-    await env.MESSAGE_ASSETS.put(key, request.body, {
+    const body = new FixedLengthStream(contentLength)
+    request.body.pipeTo(body.writable)
+    
+    await env.MESSAGE_ASSETS.put(key, body.readable, {
       httpMetadata: { contentType },
     })
 
